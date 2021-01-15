@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  blogapi:
+    env_file:
+    - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/aspnetapp.pfx
+    ports:
+      - "32500:80"
+      - "32501:443"
+    volumes:
+      - ./aspnetapp.pfx:/aspnetapp.pfx:ro
