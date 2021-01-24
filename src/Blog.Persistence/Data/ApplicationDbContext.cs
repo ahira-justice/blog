@@ -1,12 +1,18 @@
-using Microsoft.EntityFrameworkCore;
 using Blog.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Persistence.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<User> NationalParks { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
+
     }
 }
