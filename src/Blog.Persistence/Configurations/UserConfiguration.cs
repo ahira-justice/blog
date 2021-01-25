@@ -8,7 +8,13 @@ namespace Blog.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasIndex(user => user.Username).IsUnique();
+            builder
+                .HasOne(user => user.Profile)
+                .WithOne(profile => profile.User)
+                .HasForeignKey<UserProfile>(profile => profile.UserId);
+            builder
+                .HasIndex(user => user.Username)
+                .IsUnique();
         }
     }
 }
