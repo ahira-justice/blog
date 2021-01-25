@@ -3,9 +3,12 @@ using AutoMapper;
 using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
+using Blog.API.Validators.Auth.Request;
 using Blog.Persistence.Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +42,9 @@ namespace Blog.API
             services.AddAutoMapper(typeof(BlogMappings));
 
             // controllers
-            services.AddControllers();
+            services.AddControllers()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<RegisterDtoValidator>());
 
             // cors
             services.AddCors();
