@@ -1,8 +1,7 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Blog.Application.Repositories.AuthRepo;
-using Blog.API.Dtos.Auth.Request;
+using Blog.Domain.Dtos.Auth.Request;
 using FluentValidation;
 
 namespace Blog.API.Validators.Auth.Request

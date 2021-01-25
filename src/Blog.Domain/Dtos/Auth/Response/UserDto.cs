@@ -1,4 +1,4 @@
-namespace Blog.Domain.Dtos
+namespace Blog.Domain.Dtos.Auth.Response
 {
     public class UserDto
     {

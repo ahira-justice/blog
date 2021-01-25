@@ -1,4 +1,4 @@
-namespace Blog.API.Dtos.Auth.Request
+namespace Blog.Domain.Dtos.Auth.Request
 {
     public class RegisterDto
     {

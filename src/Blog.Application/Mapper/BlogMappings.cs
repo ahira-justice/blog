@@ -1,5 +1,6 @@
 using AutoMapper;
-using Blog.Domain.Dtos;
+using Blog.Domain.Dtos.Auth.Response;
+using Blog.Domain.Dtos.UserProfile.Response;
 using Blog.Domain.Entities;
 
 namespace Blog.Application.Mapper
