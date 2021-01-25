@@ -1,6 +1,8 @@
 using System.Reflection;
 using AutoMapper;
 using Blog.Application.Mapper;
+using Blog.Application.Repositories.AuthRepo;
+using Blog.Application.Repositories.UserRepo;
 using Blog.Persistence.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +25,7 @@ namespace Blog.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // database
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -31,8 +34,19 @@ namespace Blog.API
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly.GetName().Name);
                 });
             });
+
+            // automapper
             services.AddAutoMapper(typeof(BlogMappings));
+
+            // controllers
             services.AddControllers();
+
+            // cors
+            services.AddCors();
+
+            // repositories
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
