@@ -21,6 +21,12 @@ namespace Blog.API.Validators.Auth.Request
                 .NotEmpty().WithMessage("Password is required")
                 .NotNull().WithMessage("Password is required")
                 .Must(IsValidPassword).WithMessage("Password must be at least 8 characters long");
+            RuleFor(dto => dto.FirstName)
+                .NotEmpty().WithMessage("FirstName is required")
+                .NotNull().WithMessage("FirstName is required");
+            RuleFor(dto => dto.LastName)
+                .NotEmpty().WithMessage("LastName is required")
+                .NotNull().WithMessage("LastName is required");
         }
 
         private async Task<bool> UserDoesNotExist(string username, CancellationToken cancellationToken)
