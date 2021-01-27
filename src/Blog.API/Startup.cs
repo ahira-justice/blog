@@ -58,6 +58,9 @@ namespace Blog.API
 
             // services
             services.AddScoped<IAuthService, AuthService>();
+
+            // settings
+            services.Configure<ApplicationSettings>(Configuration.GetSection(nameof(ApplicationSettings)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
