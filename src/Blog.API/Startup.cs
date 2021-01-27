@@ -38,6 +38,7 @@ namespace Blog.API
                 options.UseNpgsql(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly.GetName().Name);
+                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), errorCodesToAdd : null);
                 });
             });
 
