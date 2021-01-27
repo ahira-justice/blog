@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
+using Blog.Application.Services.Auth;
 using Blog.Domain.Dtos.Auth.Request;
+using Blog.Domain.Dtos.Auth.Response;
 using Blog.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,8 +15,10 @@ namespace Blog.API.Controllers
     {
         private readonly IAuthRepository _authRepo;
         private readonly IUserRepository _userRepo;
-        public AuthController(IAuthRepository authRepo, IUserRepository userRepo)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthRepository authRepo, IUserRepository userRepo, IAuthService authService)
         {
+            _authService = authService;
             _authRepo = authRepo;
             _userRepo = userRepo;
         }
@@ -38,6 +42,20 @@ namespace Blog.API.Controllers
             var createdProfile = _userRepo.CreateUser(profileToCreate);
 
             return StatusCode(201);
+        }
+
+        [Route("login")]
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
+        {
+            var user = await _authRepo.Login(request.Username.ToLower(), request.Password);
+
+            if (user == null)
+                return Unauthorized();
+
+            var jwt = _authService.GenerateJWT(user, request.ExpiresAt);
+
+            return Ok(new TokenDto { Token = jwt });
         }
     }
 }
