@@ -1,8 +1,11 @@
+using System;
 using System.Reflection;
 using AutoMapper;
 using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
+using Blog.Application.Services.Auth;
+using Blog.Application.Settings;
 using Blog.API.Validators.Auth.Request;
 using Blog.Persistence.Data;
 using FluentValidation.AspNetCore;
@@ -52,6 +55,9 @@ namespace Blog.API
             // repositories
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            // services
+            services.AddScoped<IAuthService, AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
