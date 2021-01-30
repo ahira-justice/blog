@@ -1,10 +1,12 @@
 using System;
 using System.Reflection;
 using AutoMapper;
+using Blog.Application.Auth.Token;
 using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.Auth;
+using Blog.Application.Services.UserProfile;
 using Blog.Application.Settings;
 using Blog.API.Validators.Auth.Request;
 using Blog.Persistence.Data;
@@ -59,6 +61,9 @@ namespace Blog.API
 
             // services
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IJwtHandler, JwtHandler>();
+            services.AddHttpContextAccessor();
 
             // settings
             services.Configure<ApplicationSettings>(Configuration.GetSection(nameof(ApplicationSettings)));
@@ -73,11 +78,8 @@ namespace Blog.API
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
