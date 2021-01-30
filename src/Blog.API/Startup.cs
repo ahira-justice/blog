@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Text;
 using AutoMapper;
 using Blog.Application.Auth.Token;
 using Blog.Application.Mapper;
@@ -11,6 +12,7 @@ using Blog.Application.Settings;
 using Blog.API.Validators.Auth.Request;
 using Blog.Persistence.Data;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Blog.API
 {
@@ -65,6 +68,19 @@ namespace Blog.API
             services.AddScoped<IJwtHandler, JwtHandler>();
             services.AddHttpContextAccessor();
 
+            // authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("ApplicationSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
             // settings
             services.Configure<ApplicationSettings>(Configuration.GetSection(nameof(ApplicationSettings)));
         }
@@ -79,6 +95,7 @@ namespace Blog.API
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
