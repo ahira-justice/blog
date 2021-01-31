@@ -87,6 +87,7 @@ namespace Blog.API
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
