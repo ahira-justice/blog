@@ -2,15 +2,12 @@ using Blog.Application.Repositories.AuthRepo;
 using Blog.Domain.Dtos.Auth.Request;
 using FluentValidation;
 
-namespace Blog.API.Validators.Auth.Request
+namespace Blog.API.Validators.Auth
 {
     public class LoginDtoValidator : NullReferenceAbstractValidator<LoginDto>
     {
-        private readonly IAuthRepository _repo;
-        public LoginDtoValidator(IAuthRepository repo)
+        public LoginDtoValidator()
         {
-            _repo = repo;
-
             RuleFor(dto => dto.Username)
                 .NotEmpty().WithMessage("Username is required")
                 .NotNull().WithMessage("Username is required");

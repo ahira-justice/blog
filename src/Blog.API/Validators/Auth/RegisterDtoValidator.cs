@@ -4,7 +4,7 @@ using Blog.Application.Repositories.AuthRepo;
 using Blog.Domain.Dtos.Auth.Request;
 using FluentValidation;
 
-namespace Blog.API.Validators.Auth.Request
+namespace Blog.API.Validators.Auth
 {
     public class RegisterDtoValidator : NullReferenceAbstractValidator<RegisterDto>
     {

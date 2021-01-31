@@ -9,7 +9,7 @@ using Blog.Application.Services.Auth;
 using Blog.Application.Services.UserProfile;
 using Blog.Application.Settings;
 using Blog.API.Auth.Token;
-using Blog.API.Validators.Auth.Request;
+using Blog.API.Validators.Auth;
 using Blog.Persistence.Data;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
