@@ -2,7 +2,6 @@ using System;
 using System.Reflection;
 using System.Text;
 using AutoMapper;
-using Blog.Application.Auth.Token;
 using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
@@ -65,7 +64,7 @@ namespace Blog.API
             // services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
-            services.AddScoped<IJwtHandler, JwtHandler>();
+            services.AddScoped<ITokenHandlerService, TokenHandlerService>();
             services.AddHttpContextAccessor();
 
             // authentication
