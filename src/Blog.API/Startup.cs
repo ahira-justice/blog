@@ -9,6 +9,7 @@ using Blog.Application.Services.Auth;
 using Blog.Application.Services.UserProfile;
 using Blog.Application.Settings;
 using Blog.API.Auth.Token;
+using Blog.API.Filters;
 using Blog.API.Validators.Auth;
 using Blog.Persistence.Data;
 using FluentValidation.AspNetCore;
@@ -50,7 +51,10 @@ namespace Blog.API
             services.AddAutoMapper(typeof(BlogMappings));
 
             // controllers
-            services.AddControllers()
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(CustomExceptionFilter));
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<RegisterDtoValidator>())
                 .AddNewtonsoftJson(options =>
