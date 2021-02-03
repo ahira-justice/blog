@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Blog.API
 {
@@ -95,6 +96,7 @@ namespace Blog.API
             }
 
             app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseAuthentication();
