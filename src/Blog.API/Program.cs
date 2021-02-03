@@ -1,4 +1,5 @@
 using System;
+using Blog.API.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +22,7 @@ namespace Blog.API
             try
             {
                 Log.Information("Starting up...");
-                CreateHostBuilder(args).Build().Run();
+                CreateHostBuilder(args).Build().MigrateDatabase().Run();
             }
             catch (Exception ex)
             {
