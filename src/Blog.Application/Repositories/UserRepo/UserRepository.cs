@@ -14,28 +14,49 @@ namespace Blog.Application.Repositories.UserRepo
             _context = context;
         }
 
-        public async Task<List<UserProfile>> GetUsers()
+        public async Task<List<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<User> GetUserById(long id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+        }
+
+        public async Task<bool> UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            return await Save();
+        }
+
+        public async Task<List<UserProfile>> GetUserProfiles()
         {
             return await _context.UserProfiles.ToListAsync();
         }
 
-        public async Task<UserProfile> GetUserById(long id)
+        public async Task<UserProfile> GetUserProfileById(long id)
         {
             return await _context.UserProfiles.FirstOrDefaultAsync(x => x.UserId == id);
         }
 
-        public async Task<UserProfile> GetUserByUsername(string username)
+        public async Task<UserProfile> GetUserProfileByUsername(string username)
         {
             return await _context.UserProfiles.Include(x => x.User).FirstOrDefaultAsync(x => x.User.Username == username);
         }
 
-        public async Task<bool> CreateUser(UserProfile user)
+        public async Task<bool> CreateUserProfile(UserProfile user)
         {
             await _context.UserProfiles.AddAsync(user);
             return await Save();
         }
 
-        public async Task<bool> UpdateUser(UserProfile user)
+        public async Task<bool> UpdateUserProfile(UserProfile user)
         {
             _context.UserProfiles.Update(user);
             return await Save();
