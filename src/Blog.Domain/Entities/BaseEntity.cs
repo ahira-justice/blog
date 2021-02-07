@@ -6,7 +6,7 @@ namespace Blog.Domain.Entities
     {
         public long Id { get; set; }
         public DateTime CreatedOn { get; set; }
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
