@@ -23,6 +23,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Serilog;
+using System.IO;
 
 namespace Blog.API
 {
@@ -45,7 +46,7 @@ namespace Blog.API
                 options.UseNpgsql(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), errorCodesToAdd : null);
+                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                 });
             });
 
@@ -55,6 +56,9 @@ namespace Blog.API
             // swagger
             services.AddSwaggerGen(options =>
             {
+                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+
                 var bearerScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
@@ -73,8 +77,10 @@ namespace Blog.API
                 options.SwaggerDoc("BlogOpenAPISpec", new OpenApiInfo
                 {
                     Title = "Blog API",
-                        Version = "1"
+                    Version = "1"
                 });
+
+                options.IncludeXmlComments(xmlCommentsFilePath);
 
                 options.AddSecurityDefinition(bearerScheme.Reference.Id, bearerScheme);
 
