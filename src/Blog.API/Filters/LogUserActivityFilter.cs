@@ -24,8 +24,8 @@ namespace Blog.API.Filters
 
             var repo = resultContext.HttpContext.RequestServices.GetService<IUserRepository>();
 
-            var userId = int.Parse(resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var user = await repo.GetUserById(userId);
+            var username = resultContext.HttpContext.User.Identity.Name;
+            var user = await repo.GetUserByUsername(username);
 
             if (user != null && user.IsActive)
             {
@@ -37,7 +37,7 @@ namespace Blog.API.Filters
             }
             else
             {
-                _logger.LogInformation($"Couldn't find user with Id: {userId}");
+                _logger.LogInformation($"Couldn't find user {username}");
             }
         }
     }
