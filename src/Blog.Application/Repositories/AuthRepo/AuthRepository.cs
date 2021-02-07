@@ -1,3 +1,4 @@
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,10 @@ namespace Blog.Application.Repositories.AuthRepo
 
             if (!VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
                 return null;
+
+            user.LastLogin = DateTime.UtcNow;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
             return user;
         }
