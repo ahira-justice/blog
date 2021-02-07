@@ -38,7 +38,7 @@ namespace Blog.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromRoute] long id)
         {
-            var userProfile = await _userRepo.GetUserById(id);
+            var userProfile = await _userRepo.GetUserProfileById(id);
             var response = _mapper.Map<UserDto>(userProfile);
             return Ok(response);
         }
@@ -46,7 +46,7 @@ namespace Blog.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var userProfiles = await _userRepo.GetUsers();
+            var userProfiles = await _userRepo.GetUserProfiles();
             var response = new List<UserDto>();
 
             foreach (var userProfile in userProfiles)
@@ -61,11 +61,11 @@ namespace Blog.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromRoute] long id, [FromBody] UpdateUserDto request)
         {
-            var user = await _userRepo.GetUserById(id);
+            var user = await _userRepo.GetUserProfileById(id);
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
 
-            var userProfile = await _userRepo.UpdateUser(user);
+            var userProfile = await _userRepo.UpdateUserProfile(user);
             var response = _mapper.Map<UserDto>(userProfile);
             return Ok(response);
         }

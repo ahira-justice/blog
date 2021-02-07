@@ -39,7 +39,7 @@ namespace Blog.API.Controllers
                 LastName = request.LastName,
                 UserId = createdUser.Id
             };
-            var createdProfile = _userRepo.CreateUser(profileToCreate);
+            var createdProfile = _userRepo.CreateUserProfile(profileToCreate);
 
             return StatusCode(201);
         }
