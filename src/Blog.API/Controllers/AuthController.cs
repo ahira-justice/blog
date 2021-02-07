@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.Auth;
+using Blog.API.Filters;
 using Blog.Domain.Dtos.Auth.Request;
 using Blog.Domain.Dtos.Auth.Response;
 using Blog.Domain.Entities;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Blog.API.Controllers
 {
     [Route("api/blog/auth")]
+    [ServiceFilter(typeof(LogUserActivityFilter))]
     [ApiController]
     public class AuthController : ControllerBase
     {
