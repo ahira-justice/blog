@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -50,6 +51,41 @@ namespace Blog.API
 
             // automapper
             services.AddAutoMapper(typeof(BlogMappings));
+
+            // swagger
+            services.AddSwaggerGen(options =>
+            {
+                var bearerScheme = new OpenApiSecurityScheme
+                {
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer token",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer", // must be lower case
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Id = CustomAuthSchemes.BearerAuthScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+
+                options.SwaggerDoc("BlogOpenAPISpec", new OpenApiInfo
+                {
+                    Title = "Blog API",
+                        Version = "1"
+                });
+
+                options.AddSecurityDefinition(bearerScheme.Reference.Id, bearerScheme);
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        bearerScheme, new string[] { }
+                    }
+                });
+
+            });
 
             // controllers
             services.AddControllers(options =>
@@ -100,6 +136,12 @@ namespace Blog.API
 
             app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/BlogOpenAPISpec/swagger.json", "Blog API");
+                options.RoutePrefix = "api/blog";
+            });
             app.UseRouting();
             app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseAuthentication();
