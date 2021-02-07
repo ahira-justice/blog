@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Blog.API.Filters;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.UserProfile;
 using Blog.Domain.Dtos.Auth.Response;
@@ -12,6 +13,7 @@ namespace Blog.API.Controllers
 {
     [Route("api/blog/users")]
     [ApiController]
+    [ServiceFilter(typeof(LogUserActivityFilter))]
     [Authorize]
     public class UsersController : ControllerBase
     {
