@@ -22,6 +22,7 @@ namespace Blog.Application.Repositories.AuthRepo
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
+            user.IsActive = true;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
