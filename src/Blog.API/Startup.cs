@@ -76,6 +76,9 @@ namespace Blog.API
             services.AddScoped<ITokenHandlerService, TokenHandlerService>();
             services.AddHttpContextAccessor();
 
+            // filters
+            services.AddScoped<LogUserActivityFilter>();
+
             // authentication
             services.AddAuthentication(options =>
             {
