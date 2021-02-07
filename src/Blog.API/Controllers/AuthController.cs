@@ -2,9 +2,11 @@ using System.Threading.Tasks;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.Auth;
+using Blog.Application.ViewModels;
 using Blog.Domain.Dtos.Auth.Request;
 using Blog.Domain.Dtos.Auth.Response;
 using Blog.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -25,6 +27,8 @@ namespace Blog.API.Controllers
 
         [Route("register")]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
             var userToCreate = new User
@@ -46,6 +50,8 @@ namespace Blog.API.Controllers
 
         [Route("login")]
         [HttpPost]
+        [ProducesResponseType(typeof(TokenDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
             var user = await _authRepo.Login(request.Username.ToLower(), request.Password);
