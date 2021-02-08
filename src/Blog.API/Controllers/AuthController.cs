@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
+using Blog.Application.Exceptions;
 using Blog.Application.Extensions;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
@@ -71,7 +72,7 @@ namespace Blog.API.Controllers
             var user = await _authRepo.Login(request.Username.ToLower(), request.Password);
 
             if (user == null)
-                return Unauthorized();
+                throw new BadRequestException("Invalid request");
 
             var jwt = _authService.GenerateJWT(user, request.ExpiresAt);
 
