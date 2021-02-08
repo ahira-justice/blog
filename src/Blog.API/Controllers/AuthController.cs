@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using AutoMapper;
+using Blog.Application.Extensions;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.Auth;
@@ -19,11 +21,14 @@ namespace Blog.API.Controllers
         private readonly IAuthRepository _authRepo;
         private readonly IUserRepository _userRepo;
         private readonly IAuthService _authService;
-        public AuthController(IAuthRepository authRepo, IUserRepository userRepo, IAuthService authService)
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository authRepo, IUserRepository userRepo, IAuthService authService, IMapper mapper)
         {
             _authService = authService;
             _authRepo = authRepo;
             _userRepo = userRepo;
+            _mapper = mapper;
         }
 
         [Route("register")]
@@ -44,9 +49,17 @@ namespace Blog.API.Controllers
                 LastName = request.LastName,
                 UserId = createdUser.Id
             };
-            var createdProfile = _userRepo.CreateUserProfile(profileToCreate);
 
-            return StatusCode(201);
+            await _userRepo.CreateUserProfile(profileToCreate);
+
+            var response = _mapper.Map<UserDto>(profileToCreate);
+
+            return CreatedAtAction(
+                nameof(UsersController.Get),
+                nameof(UsersController).GetControllerName(),
+                new { id = createdUser.Id, version = HttpContext.GetRequestedApiVersion().ToString() },
+                response
+            );
         }
 
         [Route("login")]
