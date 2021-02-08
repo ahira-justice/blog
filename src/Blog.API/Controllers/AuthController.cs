@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
 {
-    [Route("api/blog/auth")]
+    [Route("api/v{version:apiVersion}/blog/auth")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class AuthController : ControllerBase
     {

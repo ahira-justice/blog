@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
 {
-    [Route("api/blog/users")]
+    [Route("api/v{version:apiVersion}/blog/users")]
+    [ApiVersion("1.0")]
     [ApiController]
     [ServiceFilter(typeof(LogUserActivityFilter))]
     [Authorize]

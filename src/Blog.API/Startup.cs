@@ -16,14 +16,15 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
-using System.IO;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Blog.API
 {
@@ -46,7 +47,7 @@ namespace Blog.API
                 options.UseNpgsql(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).GetTypeInfo().Assembly.GetName().Name);
-                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+                    sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), errorCodesToAdd : null);
                 });
             });
 
@@ -54,44 +55,15 @@ namespace Blog.API
             services.AddAutoMapper(typeof(BlogMappings));
 
             // swagger
-            services.AddSwaggerGen(options =>
+            services.AddApiVersioning(options =>
             {
-                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlCommentsFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-
-                var bearerScheme = new OpenApiSecurityScheme
-                {
-                    Name = "JWT Authentication",
-                    Description = "Enter JWT Bearer token",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer", // must be lower case
-                    BearerFormat = "JWT",
-                    Reference = new OpenApiReference
-                    {
-                        Id = CustomAuthSchemes.BearerAuthScheme,
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
-
-                options.SwaggerDoc("BlogOpenAPISpec", new OpenApiInfo
-                {
-                    Title = "Blog API",
-                    Version = "1"
-                });
-
-                options.IncludeXmlComments(xmlCommentsFilePath);
-
-                options.AddSecurityDefinition(bearerScheme.Reference.Id, bearerScheme);
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        bearerScheme, new string[] { }
-                    }
-                });
-
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.ReportApiVersions = true;
             });
+            services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
 
             // controllers
             services.AddControllers(options =>
@@ -133,7 +105,7 @@ namespace Blog.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -145,7 +117,10 @@ namespace Blog.API
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/BlogOpenAPISpec/swagger.json", "Blog API");
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
                 options.RoutePrefix = "api/blog";
             });
             app.UseRouting();
