@@ -5,7 +5,7 @@ using Blog.Persistence.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace Blog.Application.Services.UserProfile
+namespace Blog.Application.Services.Users
 {
     public class CurrentUserService : ICurrentUserService
     {

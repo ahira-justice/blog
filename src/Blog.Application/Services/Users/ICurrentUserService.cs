@@ -1,6 +1,6 @@
 using Blog.Domain.Entities;
 
-namespace Blog.Application.Services.UserProfile
+namespace Blog.Application.Services.Users
 {
     public interface ICurrentUserService
     {

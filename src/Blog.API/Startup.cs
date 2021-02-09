@@ -6,7 +6,7 @@ using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
 using Blog.Application.Services.Auth;
-using Blog.Application.Services.UserProfile;
+using Blog.Application.Services.Users;
 using Blog.Application.Settings;
 using Blog.API.Auth.Token;
 using Blog.API.Filters;
