@@ -87,6 +87,7 @@ namespace Blog.API
             // services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<ITokenHandlerService, TokenHandlerService>();
             services.AddHttpContextAccessor();
 
