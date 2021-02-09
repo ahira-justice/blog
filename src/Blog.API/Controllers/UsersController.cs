@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Blog.Application.Models;
+using Blog.Application.Queries.UserProfile;
 using Blog.Application.Repositories.UserRepo;
-using Blog.Application.Services.UserProfile;
+using Blog.Application.Services.Users;
 using Blog.Application.ViewModels;
 using Blog.API.Filters;
 using Blog.Domain.Dtos.Auth.Response;
@@ -22,10 +24,12 @@ namespace Blog.API.Controllers
     {
         private readonly IUserRepository _userRepo;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IUsersService _usersService;
         private readonly IMapper _mapper;
-        public UsersController(IUserRepository userRepo, ICurrentUserService currentUserService, IMapper mapper)
+        public UsersController(IUserRepository userRepo, ICurrentUserService currentUserService, IUsersService usersService, IMapper mapper)
         {
             _currentUserService = currentUserService;
+            _usersService = usersService;
             _userRepo = userRepo;
             _mapper = mapper;
         }
@@ -66,6 +70,27 @@ namespace Blog.API.Controllers
         {
             var userProfile = await _userRepo.GetUserProfileById(id);
             var response = _mapper.Map<UserDto>(userProfile);
+            return Ok(response);
+        }
+
+        [Route("search")]
+        [HttpGet]
+        [ProducesResponseType(typeof(DataSourceResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        public IActionResult Search([FromQuery] string username, [FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        {
+            var request = new SearchUsersQuery
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Username = username,
+                FirstName = firstName,
+                LastName = lastName
+            };
+
+            var response = _usersService.SearchUsers(request);
             return Ok(response);
         }
 
