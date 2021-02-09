@@ -37,12 +37,12 @@ namespace Blog.Application.Repositories.UserRepo
 
         public async Task<List<UserProfile>> GetUserProfiles()
         {
-            return await _context.UserProfiles.ToListAsync();
+            return await _context.UserProfiles.Include(x => x.User).ToListAsync();
         }
 
         public async Task<UserProfile> GetUserProfileById(long id)
         {
-            return await _context.UserProfiles.FirstOrDefaultAsync(x => x.UserId == id);
+            return await _context.UserProfiles.Include(x => x.User).FirstOrDefaultAsync(x => x.User.Id == id);
         }
 
         public async Task<UserProfile> GetUserProfileByUsername(string username)
