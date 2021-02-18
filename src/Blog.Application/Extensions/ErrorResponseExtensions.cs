@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Blog.Application.Exceptions;
 using Blog.Application.ViewModels;
 using Blog.Domain.Exceptions;
 
@@ -21,6 +23,16 @@ namespace Blog.Application.Extensions
             {
                 Code = ex.Code,
                 Message = ex.Message
+            };
+        }
+
+        public static ErrorResponse ToErrorResponse(this ValidationException ex)
+        {
+            return new ValidationErrorResponse
+            {
+                Code = ex.Code,
+                Message = ex.Message,
+                Errors = ex.Failures
             };
         }
     }
