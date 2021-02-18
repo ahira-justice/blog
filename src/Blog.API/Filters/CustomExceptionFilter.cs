@@ -31,6 +31,10 @@ namespace Blog.API.Filters
                     code = HttpStatusCode.BadRequest;
                     response = ex.ToErrorResponse();
                     break;
+                case ValidationException ex:
+                    code = HttpStatusCode.BadRequest;
+                    response = ex.ToErrorResponse();
+                    break;
                 case ForbiddenException ex:
                     code = HttpStatusCode.Forbidden;
                     response = ex.ToErrorResponse();
