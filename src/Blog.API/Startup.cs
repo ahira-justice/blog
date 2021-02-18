@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Blog.Application.Auth;
+using Blog.Application.Exceptions;
+using Blog.Application.Extensions;
 using Blog.Application.Mapper;
 using Blog.Application.Repositories.AuthRepo;
 using Blog.Application.Repositories.UserRepo;
@@ -83,6 +86,30 @@ namespace Blog.API
             // repositories
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            // api behaviour
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var modelState = context.ModelState;
+                    var failures = modelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value.Errors.Select(e => !string.IsNullOrEmpty(e.ErrorMessage) ? e.ErrorMessage : e.Exception.Message)
+                            .ToArray()
+                        );
+
+                    var validationException = new ValidationException
+                    {
+                        Failures = failures
+                    };
+
+                    var result = validationException.ToErrorResponse();
+                    return new BadRequestObjectResult(result);
+                };
+            });
 
             // services
             services.AddScoped<IAuthService, AuthService>();
