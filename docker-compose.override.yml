@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/aspnetapp.pfx
     ports:
-      - "32500:80"
-      - "32501:443"
+      - "32550:80"
+      - "32551:443"
     volumes:
       - ./aspnetapp.pfx:/aspnetapp.pfx:ro
