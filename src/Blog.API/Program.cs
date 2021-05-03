@@ -1,4 +1,5 @@
 using System;
+using Blog.API.Config;
 using Blog.API.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,8 @@ namespace Blog.API
     {
         public static void Main(string[] args)
         {
+            DotEnv.Load(".env");
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .MinimumLevel.Override("System", LogEventLevel.Warning)
