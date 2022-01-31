@@ -3,7 +3,7 @@ version: '3.4'
 services:
   blogapi:
     env_file:
-    - .env
+    - .dockerenv
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

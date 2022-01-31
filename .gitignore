@@ -428,3 +428,4 @@ $RECYCLE.BIN/
 ##
 .vscode/
 .env
+.dockerenv
