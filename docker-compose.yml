@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-  blogapi:
-    container_name: blogapi
-    image: ${DOCKER_REGISTRY-}blogapi:latest
+  blog:
+    container_name: blog
+    image: ${DOCKER_REGISTRY-}blog:latest
     build:
       context: .
       dockerfile: src/Blog.API/Dockerfile
